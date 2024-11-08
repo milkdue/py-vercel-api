@@ -11,6 +11,7 @@ def generate_contribute_data(name):
     git_page.encoding = "utf-8"
     # print(git_page.text)
     soup = BeautifulSoup(git_page.text, "html.parser")
+    print(soup)
     div_wrapper_node = soup.find("div", class_="js-calendar-graph")
     table_node = div_wrapper_node.find("table", class_="js-calendar-graph-table")
     tbody_node = table_node.find("tbody")
