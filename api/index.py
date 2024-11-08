@@ -11,9 +11,10 @@ def generate_contribute_data(name):
     git_page.encoding = "utf-8"
     # print(git_page.text)
     soup = BeautifulSoup(git_page.text, "html.parser")
-    print(soup)
     print("----------------")
     div_wrapper_node = soup.find("div", class_="js-calendar-graph")
+    print(div_wrapper_node)
+    print("----------------")
     table_node = div_wrapper_node.find("table", class_="js-calendar-graph-table")
     tbody_node = table_node.find("tbody")
     tr_nodes = tbody_node.find_all("tr")
@@ -96,5 +97,7 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(data).encode('utf-8'))
         return
+
+print(generate_contribute_data("milkdue"))
 
 
