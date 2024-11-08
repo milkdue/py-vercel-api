@@ -86,6 +86,7 @@ class handler(BaseHTTPRequestHandler):
         query = path.split('?')[-1]
         params = urllib.parse.parse_qs(query)
         name = params.get("name", [""])[0]
+        print(name)
         data = generate_contribute_data(name)
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
