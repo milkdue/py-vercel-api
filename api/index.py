@@ -6,14 +6,20 @@ import json
 import urllib.parse
 
 def generate_contribute_data(name):
-    url = "https://github.com/" + name
-    git_page = requests.get(url, "lxml")
+    url = "https://github.com/" + name + "?action=show&controller=profiles&tab=contributions&user_id=" + name
+    # url = "http://127.0.0.1:54948/index.html"
+    print(url, "url")
+    headers = {
+        "X-Requested-With": "XMLHttpRequest"
+    }
+    git_page = requests.get(url, headers=headers)
     git_page.encoding = "utf-8"
     # print(git_page.text)
     soup = BeautifulSoup(git_page.text, "html.parser")
+    # print(soup)
     print("----------------")
     div_wrapper_node = soup.find("div", class_="js-calendar-graph")
-    print(div_wrapper_node)
+    # print(div_wrapper_node)
     print("----------------")
     table_node = div_wrapper_node.find("table", class_="js-calendar-graph-table")
     tbody_node = table_node.find("tbody")
@@ -29,18 +35,21 @@ def generate_contribute_data(name):
             if td_nodes:
                 for td in td_nodes:
                     date = td.attrs.get("data-date")
-                    aria = td.attrs.get("aria-labelledby")
-                    if date and aria:
+                    element_id = td.attrs.get("id")
+                    # print(element_id)
+                    if date and element_id:
                         index_map[index].append({
                             "date": date,
-                            "count": calc_count_by_id(div_wrapper_node, aria)
+                            "count": calc_count_by_id(div_wrapper_node, element_id)
                         })
 
     return handler_data(index_map)
 
 def calc_count_by_id(wrapper, element_id):
-    node = wrapper.find("tool-tip", id=element_id)
-
+    node = wrapper.find("tool-tip", {
+        "for": element_id
+    })
+    # print(node)
     if node:
         return extract_number_and_text(node.text)
 
